@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">MovieTrailerApp</string>
+    <string name="btnGo_text">Go</string>
+</resources>
