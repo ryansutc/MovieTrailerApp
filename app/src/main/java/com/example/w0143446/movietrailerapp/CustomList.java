@@ -5,12 +5,17 @@ package com.example.w0143446.movietrailerapp;
  */
 
 import android.app.Activity;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.os.StrictMode;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
+import java.net.URL;
+
 
 import java.util.HashSet;
 import java.util.Set;
@@ -18,14 +23,16 @@ import java.util.Set;
 public class CustomList extends ArrayAdapter<String> {
     private final Activity context;
     private final String[] web;
-    private final Integer[] imageId;
+    private final String[] thumbnail;
     private Set<String> viewedImgSet;
+   StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+    StrictMode.setThreadPolicy(policy);
 
-    public CustomList(Activity context, String[] web, Integer[] imageId) {
+    public CustomList(Activity context, String[] web, String[] thumbnail) {
         super(context, R.layout.list_single, web);
         this.context = context;
         this.web = web;
-        this.imageId = imageId;
+        this.thumbnail = thumbnail;
 
     }
     @Override
@@ -35,7 +42,12 @@ public class CustomList extends ArrayAdapter<String> {
         TextView txtTitle = (TextView) rowView.findViewById(R.id.txt);
         ImageView imageView = (ImageView) rowView.findViewById(R.id.img);
         txtTitle.setText(web[position]);
-        imageView.setImageResource(imageId[position]);
+
+        //http://stackoverflow.com/questions/2471935/how-to-load-an-imageview-by-url-in-android
+        URL newurl = new URL("http://www.heyyou.com/image.png");   //thumbnail[position]);
+        Bitmap icon = BitmapFactory.decodeStream(newurl.openConnection().getInputStream());
+        imageView.setImageBitmap(icon);
+        //imageView.setImageResource(thumbnail[position]);
         return rowView;
     }
 
