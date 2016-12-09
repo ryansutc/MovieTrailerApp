@@ -1,9 +1,11 @@
 package com.example.w0143446.movietrailerapp;
 
+import android.content.Intent;
 import android.database.Cursor;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -16,22 +18,38 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.HashSet;
 
+/*
+Note: backed up on Git hub. If in D313 try
+https://www.londonappdeveloper.com/how-to-use-git-hub-with-android-studio/
+ */
 public class MainActivity extends AppCompatActivity {
     Button btnGo;
     DBAdapter db;
     ListView listview;
     DummyData dummyData;
     private CustomList adapter;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
         db = new DBAdapter(this);
-        db.getAllVideo();
-        listview = (ListView) findViewById(R.id.listView);
-        adapter = new CustomList(MainActivity.this, db.getVideoTitles(), db.getVideoThumbnails()); //convert string set to hashset
 
+       /*
+       Use this only on first load of Emulator!!!
+        */
+        //dummyData = new DummyData();
+        //dummyData.addData(db); //add my data to dbAdapter
+
+        //db.getAllVideo();
+        listview = (ListView) findViewById(R.id.listView);
+
+        db.open();
+        adapter = new CustomList(MainActivity.this, db.getVideoTitles(), db.getVideoIDs(), db.getVideoThumbnails()); //convert string set to hashset
+        db.close();
+
+        listview.setAdapter(adapter);
         try {
             String destPath = "/data/data/" + getPackageName() + "/database/MyDB";
             //String destPath = Environment.getExternalStorageDirectory().getPath() +
@@ -47,8 +65,6 @@ public class MainActivity extends AppCompatActivity {
             e.printStackTrace();
         }
 
-        dummyData.addData(db);
-
         btnGo = (Button) findViewById(R.id.btnGo);
         btnGo.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -56,7 +72,21 @@ public class MainActivity extends AppCompatActivity {
                 DisplayContact(db.getAllVideo());
             }
         });
+        listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                Toast.makeText(MainActivity.this, "You Clicked at " + i, Toast.LENGTH_SHORT).show();
 
+                //create a new intent, pass image, send intent
+                Intent myIntent = new Intent(MainActivity.this, VideoDetailsActivity.class);
+
+                myIntent.putExtra("videoTitle", adapter.videoTitle[i]);
+                myIntent.putExtra("videoID", adapter.videoID[i]);
+                Toast.makeText(MainActivity.this, adapter.videoTitle[i], Toast.LENGTH_SHORT).show();
+                myIntent.putExtra("image", adapter.thumbnail[i]);
+                startActivity(myIntent); //no result expected back
+            }
+        });
     }//end method onCreate
 
     public void CopyDB(InputStream inputStream, OutputStream outputStream)
@@ -82,7 +112,7 @@ public class MainActivity extends AppCompatActivity {
                 Toast.LENGTH_LONG).show();
     }
 
-    public long addVideoClip(String name, String desc, int rating, String link, String category, int thumbnail){
+    public long addVideoClip(String name, String desc, int rating, String link, String category, String thumbnail){
         //add a contact- CREATE NEW RECORD
         db.open();
         long id = db.insertVideo(name, desc, rating, link, category, thumbnail);

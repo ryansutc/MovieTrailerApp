@@ -1,4 +1,10 @@
 <resources>
     <string name="app_name">MovieTrailerApp</string>
     <string name="btnGo_text">Go</string>
+    <string name="title_activity_video_details">VideoDetailsActivity</string>
+    <string name="tvName_text">Name of Video</string>
+    <string name="tvDesc_text">Video Description Here</string>
+    <string name="btnEdit_text">Edit</string>
+    <string name="btnWatch_text">Watch Video</string>
+    <string name="title_activity_add_edit_form">AddEditForm</string>
 </resources>
