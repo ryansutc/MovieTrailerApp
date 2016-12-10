@@ -1,11 +1,13 @@
 package com.example.w0143446.movietrailerapp;
 
 import android.content.ActivityNotFoundException;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
@@ -29,9 +31,13 @@ public class VideoDetailsActivity extends AppCompatActivity {
     ImageView imageView;
     TextView tvName;
     TextView tvDescription;
+    TextView tvCategory;
     RatingBar ratingBar;
     Button btnEdit;
     Button btnWatch;
+    Button btnDelete;
+
+    DialogInterface.OnClickListener dialogClickListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,6 +64,9 @@ public class VideoDetailsActivity extends AppCompatActivity {
         tvName.setText(videoName);
         tvDescription = (TextView) findViewById(R.id.tvDescription);
         tvDescription.setText(videoDesc);
+
+        tvCategory = (TextView) findViewById(R.id.tvCategory);
+        tvCategory.setText(videoCat);
         imageView = (ImageView) findViewById(R.id.imageView);
         new ImageDownloader((ImageView)  imageView).execute(videoThumbURL);
         ratingBar = (RatingBar) findViewById(R.id.ratingBar);
@@ -96,9 +105,52 @@ public class VideoDetailsActivity extends AppCompatActivity {
                 }
                 catch(ActivityNotFoundException e){
                         Toast.makeText(VideoDetailsActivity.this, "Plase install Youtube app to see this video", Toast.LENGTH_LONG).show();
-                    }
+                }
             }
         }); //end btnEdit on click listener class
+
+        btnDelete = (Button) findViewById(R.id.btnDelete);
+        btnDelete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                AlertDialog.Builder builder; //dialog builder
+                builder = new AlertDialog.Builder(VideoDetailsActivity.this);
+
+                builder.setMessage("Woah! Are you sure you want to delete this video record completely?")
+                        .setPositiveButton("Yes", dialogClickListener)
+                        .setNegativeButton("No", dialogClickListener)
+                        .show();//handle the person clicking no to the proceed dialog.
+            }
+        });
+
+        dialogClickListener = new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                switch (which) {
+                    case DialogInterface.BUTTON_POSITIVE:
+                        //Yes button clicked
+                        adapter.open();
+                            adapter.deleteVideo(videoID);
+                        adapter.close();
+                        Toast.makeText(VideoDetailsActivity.this,"Record Deleted",Toast.LENGTH_SHORT).show();
+                        Intent myIntent = new Intent(VideoDetailsActivity.this, MainActivity.class);
+                        startActivity(myIntent); //no result expected back
+                        //call Next Page
+                        break;
+
+                    case DialogInterface.BUTTON_NEGATIVE:
+                        //No button clicked
+                        break;
+                }
+            }
+        };//end dialogClickListener
     }
 
+    @Override
+    public void onBackPressed() {
+        // Overriding the back button push on the device. Go home!
+        Intent myIntent = new Intent(VideoDetailsActivity.this, MainActivity.class);
+        startActivity(myIntent); //no result expected back
+        return;
+    }
 }

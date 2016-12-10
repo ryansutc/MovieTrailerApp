@@ -15,4 +15,5 @@
     <string name="btnCancel_text">Cancel</string>
     <string name="btnSave_text">Save</string>
     <string name="WatchVideo">Watch Video</string>
+    <string name="btnDelete_text">Delete</string>
 </resources>
