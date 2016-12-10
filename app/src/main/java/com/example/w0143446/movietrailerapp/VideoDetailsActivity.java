@@ -1,5 +1,6 @@
 package com.example.w0143446.movietrailerapp;
 
+import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
@@ -8,9 +9,13 @@ import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
+import android.widget.Toast;
+import com.google.android.youtube.player.*;
+
 
 public class VideoDetailsActivity extends AppCompatActivity {
     private Integer videoID;
@@ -25,6 +30,9 @@ public class VideoDetailsActivity extends AppCompatActivity {
     TextView tvName;
     TextView tvDescription;
     RatingBar ratingBar;
+    Button btnEdit;
+    Button btnWatch;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -64,6 +72,33 @@ public class VideoDetailsActivity extends AppCompatActivity {
                 adapter.updateVideo(videoID,videoName, videoDesc, videoRating, videoUrl, videoCat, videoThumb);
             }
         });
+        btnEdit = (Button) findViewById(R.id.btnEdit);
+        btnEdit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //create a new intent, pass image, send intent
+                Intent myIntent = new Intent(VideoDetailsActivity.this, AddEditForm.class);
+
+                myIntent.putExtra("videoID", videoID);
+                startActivity(myIntent); //no result expected back
+            }
+        }); //end btnEdit on click listener class
+        btnWatch = (Button) findViewById(R.id.btnWatch);
+        btnWatch.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //create a new intent, pass image, send intent
+                // notes here: http://stackoverflow.com/questions/11767172/activitynotfoundexception-when-loading-youtube-video
+                try {
+                    Intent intent = YouTubeStandalonePlayer.createVideoIntent(VideoDetailsActivity.this,
+                            "AIzaSyAVZk_GvGz06jzKx1X2SGP0MHATBFt16eU", videoUrl);
+                    startActivity(intent);
+                }
+                catch(ActivityNotFoundException e){
+                        Toast.makeText(VideoDetailsActivity.this, "Plase install Youtube app to see this video", Toast.LENGTH_LONG).show();
+                    }
+            }
+        }); //end btnEdit on click listener class
     }
 
 }
