@@ -7,4 +7,12 @@
     <string name="btnEdit_text">Edit</string>
     <string name="btnWatch_text">Watch Video</string>
     <string name="title_activity_add_edit_form">AddEditForm</string>
+    <string name="tvRating_text">Rating</string>
+    <string name="tvURL_text">Video URL</string>
+    <string name="tvthumb_text">Image Thumbnail</string>
+    <string name="Category">tvCategory</string>
+    <string name="tvCategory">Category</string>
+    <string name="btnCancel_text">Cancel</string>
+    <string name="btnSave_text">Save</string>
+    <string name="WatchVideo">Watch Video</string>
 </resources>
