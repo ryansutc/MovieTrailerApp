@@ -7,6 +7,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -27,9 +28,10 @@ public class AddEditForm extends AppCompatActivity {
     RatingBar videoRatingBar;
     EditText etURL;
     EditText etCategory;
-    EditText etThumb;
+
     Button btnSave;
     Button btnCancel;
+    String formType; //edit situation or add new situation
 
     DBAdapter adapter;
     @Override
@@ -44,33 +46,68 @@ public class AddEditForm extends AppCompatActivity {
         videoRatingBar = (RatingBar) findViewById(R.id.videoRatingBar);
         etURL = (EditText) findViewById(R.id.etURL);
         etCategory = (EditText) findViewById(R.id.etCategory);
-        etThumb = (EditText) findViewById(R.id.etThumb);
 
+
+        adapter = new DBAdapter(this);
         //handle intent
         Intent myintent = getIntent();
-        videoID = myintent.getIntExtra("videoID", 0);
-        adapter = new DBAdapter(this);
-        loadRecord();
+        formType = myintent.getStringExtra("Type");
+
+        if (formType.equals("Create")) {
+            //call create method for new record
+        }
+        else if (formType.equals("Edit")) {
+            //call edit method for editing existing record
+            videoID = myintent.getIntExtra("videoID", 0);
+            loadRecord();
+        }
+
 
         btnSave = (Button) findViewById(R.id.btnSave);
         btnSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 //do some validation here
+
                 videoName = etName.getText().toString().trim();
                 videoDesc = etDesc.getText().toString().trim();
                 videoRating = videoRatingBar.getRating();
                 videoUrl = etURL.getText().toString().trim();
+                if (!Patterns.WEB_URL.matcher(videoUrl).matches()){ //not a url
+                    if (!Patterns.WEB_URL.matcher("https://youtb.be/" + videoUrl).matches()){ //concat to url?
+                        Toast.makeText(AddEditForm.this, "Invalid URL. Please fix and try again", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+                    else {
+                        videoUrl = videoUrl.replace("https://youtb.be/", "");
+                        System.out.println(videoUrl);
+                    }
+                }
                 videoCat = etCategory.getText().toString().trim();
-                videoThumb = etThumb.getText().toString().trim();
+                videoThumb = "https://img.youtube.com/vi/v=" + videoUrl + "/sddefault.jpg";
                 adapter.open();
-                try {
-                    adapter.updateVideo(videoID, videoName, videoDesc, videoRating, videoUrl, videoCat, videoThumb);
+                if (formType.equals("Create")) {
+                    try {
+                        //insertVideo(String name, String desc, float rating, String link, String category, String thumbnail)
+                        videoID = (int) adapter.insertVideo(videoName, videoDesc, videoRating, videoUrl, videoCat, videoThumb);
+                        formType = "Edit";
+                    }
+                    catch( Exception e) {
+                        Toast.makeText(AddEditForm.this, "Error: Could not insert the record in database. Details \n"
+                                + e, Toast.LENGTH_LONG).show();
+                        System.out.println("Error: " + e);
+                    }
                 }
-                catch( Exception e) {
-                    Toast.makeText(AddEditForm.this, "Error: Could not update the record in database. Details \n" + e, Toast.LENGTH_LONG).show();
-                    System.out.println("Error: " + e);
+                else if (formType.equals("Edit")) {
+                    try {
+                        adapter.updateVideo(videoID, videoName, videoDesc, videoRating, videoUrl, videoCat, videoThumb);
+                    }
+                    catch( Exception e) {
+                        Toast.makeText(AddEditForm.this, "Error: Could not update the record in database. Details \n" + e, Toast.LENGTH_LONG).show();
+                        System.out.println("Error: " + e);
+                    }
                 }
+
                 adapter.close();
                 //return to details screen
                 Intent myIntent = new Intent(AddEditForm.this, VideoDetailsActivity.class);
@@ -100,7 +137,6 @@ public class AddEditForm extends AppCompatActivity {
             videoRatingBar.setRating(cursor.getFloat(3));
             etURL.setText(cursor.getString(4));
             etCategory.setText(cursor.getString(5));
-            etThumb.setText(cursor.getString(6));
         adapter.close();
     }
 }

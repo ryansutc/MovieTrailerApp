@@ -31,6 +31,17 @@ public class DummyData {
         id = db.insertVideo("Kids in the Hall - Bad Doctor", "The I'm a bad doctor skit with Dave Foley",
                 5f, "Pbjypn9JtKE",
                 "Adventure","https://img.youtube.com/vi/v=Pbjypn9JtKE/sddefault.jpg");
+
+        id = db.insertVideo("Dimitri Martin - Some Jokes", "Dimitri Martin's classic one liners",
+                3.5f, "fAkN5j54eEA", "Jokes", "https://img.youtube.com/vi/v=fAkN5j54eEA/sddefault.jpg");
+
+        id = db.insertVideo("The Whitest Kids You Know- Clean Wet", "The best toilet jokes from the defunct Kids in the hall ripoff skit comedy",
+                2.5f, "cL8Yors-C2A", "Jokes", "https://img.youtube.com/vi/v=cL8Yors-C2A/sddefault.jpg");
+
+        id = db.insertVideo("Homer gets a Gun", "The best from season 9 of the simpsons",
+                4f, "ZuG9kUiRC_I", "TV", "https://img.youtube.com/vi/v=ZuG9kUiRC_I/sddefault.jpg");
+
+
         db.close();
     }
 }

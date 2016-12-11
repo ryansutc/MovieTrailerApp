@@ -81,17 +81,6 @@
             android:layout_height="wrap_content"
             android:id="@+id/etCategory" />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceSmall"
-            android:text="@string/tvthumb_text"
-            android:id="@+id/tvThumb" />
-
-        <EditText
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/etThumb" />
 
 
     </LinearLayout>

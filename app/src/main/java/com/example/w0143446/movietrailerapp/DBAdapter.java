@@ -87,7 +87,7 @@ public class DBAdapter {
         initialValues.put(KEY_LINK, link);
         initialValues.put(KEY_CATEGORY, category);
         initialValues.put(KEY_THUMBNAIL, thumbnail);
-
+        //assume the return value is the recordID?
         return sqlLiteDb.insert(DATABASE_TABLE, null, initialValues);
     }
 

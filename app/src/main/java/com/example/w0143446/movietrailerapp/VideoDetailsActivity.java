@@ -87,7 +87,7 @@ public class VideoDetailsActivity extends AppCompatActivity {
             public void onClick(View view) {
                 //create a new intent, pass image, send intent
                 Intent myIntent = new Intent(VideoDetailsActivity.this, AddEditForm.class);
-
+                myIntent.putExtra("Type", "Edit");
                 myIntent.putExtra("videoID", videoID);
                 startActivity(myIntent); //no result expected back
             }

@@ -7,8 +7,11 @@ package com.example.w0143446.movietrailerapp;
 import android.app.Activity;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.StrictMode;
+import android.support.annotation.NonNull;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -42,33 +45,6 @@ public class CustomList extends ArrayAdapter<String> {
 
     }
 
-    private class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
-        /*
-        Method to load the youtube video images from URL
-        */
-        ImageView bmImage;
-
-        public DownloadImageTask(ImageView bmImage) {
-            this.bmImage = bmImage;
-        }
-
-        protected Bitmap doInBackground(String... urls) {
-            String urldisplay = urls[0];
-            Bitmap mIcon11 = null;
-            try {
-                InputStream in = new java.net.URL(urldisplay).openStream();
-                mIcon11 = BitmapFactory.decodeStream(in);
-            } catch (Exception e) {
-                Log.e("Error", e.getMessage());
-                e.printStackTrace();
-            }
-            return mIcon11;
-        }
-        protected void onPostExecute(Bitmap result) {
-            //pDlg.dismiss();
-            bmImage.setImageBitmap(result);
-        }
-    }
 
     @Override
     public View getView(int position, View view, ViewGroup parent) {
@@ -80,24 +56,18 @@ public class CustomList extends ArrayAdapter<String> {
 
         //http://stackoverflow.com/questions/2471935/how-to-load-an-imageview-by-url-in-android
         new ImageDownloader((ImageView)  imageView).execute(thumbnail[position]);
+        if (!hasImage(imageView)){
+            BitmapFactory.decodeResource(context.getResources(),
+                    R.drawable.novideo);
+        }
+
         //URL newurl = new URL("http://www.heyyou.com/image.png");   //thumbnail[position]);
         //Bitmap icon = BitmapFactory.decodeStream(newurl.openConnection().getInputStream());
         //imageView.setImageBitmap(icon);
         //imageView.setImageResource(thumbnail[position]);
         return rowView;
     }
-/*
-    @Override
-    public boolean isEnabled(int position) {
-        //System.out.println("my custom isEnabled button was triggered");
-        if (viewedImgSet.contains(String.valueOf(position))){
-            return false;
-        }
-        else {
-            return true;
-        }
-    }
-*/
+
     public void setItemEnabled(int position, boolean enabled) {
         /*a custom function to toggle a particular
         list item to be enabled or disabled
@@ -118,6 +88,19 @@ public class CustomList extends ArrayAdapter<String> {
 
         System.out.println("Returned the Set");
         return this.viewedImgSet;
+    }
+
+    //this shamelessly copied from here: http://stackoverflow.com/questions/9113895/how-to-check-if-an-imageview-is-attached-with-image-in-android
+    private boolean hasImage(@NonNull ImageView view) {
+        //check if image set for imageView
+        Drawable drawable = view.getDrawable();
+        boolean hasImage = (drawable != null);
+
+        if (hasImage && (drawable instanceof BitmapDrawable)) {
+            hasImage = ((BitmapDrawable)drawable).getBitmap() != null;
+        }
+
+        return hasImage;
     }
 }
 

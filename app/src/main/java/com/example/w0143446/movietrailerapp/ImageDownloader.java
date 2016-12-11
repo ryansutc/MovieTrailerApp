@@ -1,5 +1,6 @@
 package com.example.w0143446.movietrailerapp;
 
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
@@ -20,7 +21,6 @@ public class ImageDownloader extends AsyncTask<String, Void, Bitmap> {
     public ImageDownloader(ImageView bmImage) {
         this.bmImage = bmImage;
     }
-
     protected Bitmap doInBackground(String... urls) {
         String urldisplay = urls[0];
         Bitmap mIcon11 = null;

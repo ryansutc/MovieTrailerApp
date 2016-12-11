@@ -23,7 +23,7 @@ Note: backed up on Git hub. If in D313 try
 https://www.londonappdeveloper.com/how-to-use-git-hub-with-android-studio/
  */
 public class MainActivity extends AppCompatActivity {
-    Button btnGo;
+    Button btnAdd;
     DBAdapter db;
     ListView listview;
     DummyData dummyData;
@@ -65,13 +65,15 @@ public class MainActivity extends AppCompatActivity {
             e.printStackTrace();
         }
 
-        btnGo = (Button) findViewById(R.id.btnGo);
-        btnGo.setOnClickListener(new View.OnClickListener() {
+         btnAdd = (Button) findViewById(R.id.btnAdd);
+        btnAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                DisplayContact(db.getAllVideo());
+                Intent myIntent = new Intent(MainActivity.this, AddEditForm.class);
+                myIntent.putExtra("Type", "Create");
+                startActivity(myIntent); //no result expected back
             }
-        });
+        });//end btnAdd click Event
         listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
@@ -80,10 +82,8 @@ public class MainActivity extends AppCompatActivity {
                 //create a new intent, pass image, send intent
                 Intent myIntent = new Intent(MainActivity.this, VideoDetailsActivity.class);
 
-                myIntent.putExtra("videoTitle", adapter.videoTitle[i]);
                 myIntent.putExtra("videoID", adapter.videoID[i]);
                 Toast.makeText(MainActivity.this, adapter.videoTitle[i], Toast.LENGTH_SHORT).show();
-                myIntent.putExtra("image", adapter.thumbnail[i]);
                 startActivity(myIntent); //no result expected back
             }
         });
