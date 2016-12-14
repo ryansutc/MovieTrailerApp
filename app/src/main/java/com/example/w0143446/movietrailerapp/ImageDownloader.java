@@ -3,7 +3,10 @@ package com.example.w0143446.movietrailerapp;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
+import android.support.annotation.NonNull;
 import android.util.Log;
 import android.widget.ImageView;
 
@@ -17,6 +20,7 @@ public class ImageDownloader extends AsyncTask<String, Void, Bitmap> {
        Method to load the youtube video images from URL
        */
     ImageView bmImage;
+    private Context mContext;
 
     public ImageDownloader(ImageView bmImage) {
         this.bmImage = bmImage;
@@ -30,12 +34,14 @@ public class ImageDownloader extends AsyncTask<String, Void, Bitmap> {
         } catch (Exception e) {
             Log.e("Error", e.getMessage());
             e.printStackTrace();
+
         }
         return mIcon11;
     }
     protected void onPostExecute(Bitmap result) {
         //pDlg.dismiss();
-        bmImage.setImageBitmap(result);
+        if(result != null){
+            bmImage.setImageBitmap(result);
+        }
     }
 }
-

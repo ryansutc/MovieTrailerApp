@@ -1,6 +1,8 @@
 package com.example.w0143446.movietrailerapp;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -29,6 +31,9 @@ public class MainActivity extends AppCompatActivity {
     DummyData dummyData;
     private CustomList adapter;
 
+    //shared preferences stuff
+    public SharedPreferences settings;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -39,8 +44,16 @@ public class MainActivity extends AppCompatActivity {
        /*
        Use this only on first load of Emulator!!!
         */
-        //dummyData = new DummyData();
-        //dummyData.addData(db); //add my data to dbAdapter
+        settings = this.getPreferences(Context.MODE_PRIVATE); //0 = private
+        boolean popdatabase = settings.getBoolean("PopulateDatabase", true); //if there isn't already a property set, make true
+        if(popdatabase) {
+            dummyData = new DummyData();
+            dummyData.addData(db); //add my data to dbAdapter
+            System.out.println("database populated");
+        }
+        SharedPreferences.Editor editor = settings.edit();
+        editor.putBoolean("PopulateDatabase", false);
+        editor.apply(); //switched to apply as per recommendations
 
         //db.getAllVideo();
         listview = (ListView) findViewById(R.id.listView);

@@ -55,7 +55,7 @@ public class CustomList extends ArrayAdapter<String> {
         txtTitle.setText(videoTitle[position]);
 
         //http://stackoverflow.com/questions/2471935/how-to-load-an-imageview-by-url-in-android
-        new ImageDownloader((ImageView)  imageView).execute(thumbnail[position]);
+        new ImageDownloader((ImageView) imageView).execute(thumbnail[position]);
         if (!hasImage(imageView)){
             BitmapFactory.decodeResource(context.getResources(),
                     R.drawable.novideo);

@@ -68,7 +68,7 @@ public class VideoDetailsActivity extends AppCompatActivity {
         tvCategory = (TextView) findViewById(R.id.tvCategory);
         tvCategory.setText(videoCat);
         imageView = (ImageView) findViewById(R.id.imageView);
-        new ImageDownloader((ImageView)  imageView).execute(videoThumbURL);
+        new ImageDownloader((ImageView) imageView).execute(videoThumbURL);
         ratingBar = (RatingBar) findViewById(R.id.ratingBar);
         ratingBar.setStepSize(0.5f);
         ratingBar.setRating(videoRating);
